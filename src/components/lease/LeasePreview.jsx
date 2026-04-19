@@ -15,9 +15,12 @@ export default function LeasePreview() {
 
   if (!isReady) {
     return (
-      <div className="card text-center py-10 text-gray-400 border-dashed">
-        <span className="text-3xl mb-2 block">📄</span>
-        <p className="text-sm">Complete all fields above to preview the lease agreement.</p>
+      <div className="card text-center py-12 border-2 border-dashed border-gray-200">
+        <span className="text-4xl mb-3 block">📄</span>
+        <p className="font-black text-[#064e3b] uppercase tracking-wide text-sm mb-1">
+          Preview Not Ready
+        </p>
+        <p className="text-sm text-gray-500">Complete all fields above to preview the lease agreement.</p>
       </div>
     )
   }
@@ -35,7 +38,7 @@ export default function LeasePreview() {
 
   async function handlePrint() {
     try {
-      if (rentData.currentRecordId) {
+      if (supabase && rentData.currentRecordId) {
         await supabase.from('lease_agreements').insert({
           rent_record_id:  rentData.currentRecordId,
           agreed_rent:     parseFloat(rentData.agreedRent),
@@ -45,16 +48,16 @@ export default function LeasePreview() {
           agreement_body:  agreement,
         })
       }
-    } catch {
-      // Non-critical — proceed to print regardless
-    }
+    } catch { /* non-critical */ }
     window.print()
   }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
-        <h3 className="font-semibold text-gray-900">Lease Agreement Preview</h3>
+        <h3 className="font-black text-[#064e3b] uppercase tracking-wide text-sm">
+          Lease Agreement Preview
+        </h3>
         <button onClick={handlePrint} className="btn-primary flex items-center gap-2 shrink-0">
           🖨 Print / Save as PDF
         </button>

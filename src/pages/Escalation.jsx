@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRent } from '../context/RentContext'
 import EscalationPortal from '../components/escalation/EscalationPortal'
+import WizardProgress from '../components/shared/WizardProgress'
 
 export default function Escalation() {
   const { rentData } = useRent()
@@ -10,8 +11,9 @@ export default function Escalation() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="card text-center py-14">
-          <p className="text-gray-500 mb-5">Please complete the rent form first.</p>
-          <button onClick={() => navigate('/')} className="btn-primary">Go to Dashboard</button>
+          <span className="text-5xl mb-4 block">🏛</span>
+          <p className="text-gray-500 mb-6 text-sm">Please complete the rent form first.</p>
+          <button onClick={() => navigate('/')} className="btn-primary">Go to Dashboard →</button>
         </div>
       </div>
     )
@@ -27,18 +29,7 @@ export default function Escalation() {
         </p>
       </div>
 
-      {/* Wizard progress */}
-      <div className="flex items-center gap-2 text-xs text-gray-500 no-print">
-        <span className="bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded">1. Data ✓</span>
-        <span className="text-gray-300">→</span>
-        <span className="bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded">2. Legal ✓</span>
-        <span className="text-gray-300">→</span>
-        <span className="bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded">3. Negotiate ✓</span>
-        <span className="text-gray-300">→</span>
-        <span className="bg-green-700 text-white font-semibold px-2 py-0.5 rounded">4. Escalate</span>
-        <span className="text-gray-300">→</span>
-        <span className="text-gray-400 px-2 py-0.5">5. Lease</span>
-      </div>
+      <WizardProgress current={3} />
 
       <EscalationPortal />
 

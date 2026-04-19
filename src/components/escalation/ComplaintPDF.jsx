@@ -19,12 +19,19 @@ export default function ComplaintPDF() {
 
   return (
     <div className="space-y-4">
-      <div className="border-l-4 border-red-500 bg-red-50 rounded-r-xl p-4 no-print">
-        <p className="font-semibold text-red-800">Formal Complaint — Rent Control Department</p>
-        <p className="text-sm text-red-700 mt-1">
-          Print or save this document and submit it in person to the Rent Control Department,
-          Greater Accra Region. Bring your ID and any supporting documents.
-        </p>
+      <div className="card border-l-4 border-red-500 bg-red-50 no-print">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl shrink-0">⚠️</span>
+          <div>
+            <p className="font-black text-red-800 uppercase tracking-wide text-sm">
+              Formal Complaint — Rent Control Department
+            </p>
+            <p className="text-sm text-red-700 mt-1 leading-relaxed">
+              Edit the complaint if needed, then email it or print and submit in person.
+              Bring your ID and any supporting documents.
+            </p>
+          </div>
+        </div>
       </div>
 
       <LetterPreview

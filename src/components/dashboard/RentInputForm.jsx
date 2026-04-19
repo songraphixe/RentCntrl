@@ -35,24 +35,24 @@ export default function RentInputForm() {
 
     let recordId = null
     try {
-      const { data } = await supabase
-        .from('rent_records')
-        .insert({
-          tenant_name:    rentData.tenantName,
-          landlord_name:  rentData.landlordName,
-          address:        rentData.address,
-          neighborhood:   rentData.neighborhood,
-          room_type:      rentData.roomType,
-          previous_rent:  parseFloat(rentData.previousRent),
-          proposed_rent:  parseFloat(rentData.proposedRent),
-          effective_date: rentData.effectiveDate,
-        })
-        .select()
-        .single()
-      recordId = data?.id ?? null
-    } catch {
-      // Supabase not configured — continue without persisting
-    } finally {
+      if (supabase) {
+        const { data } = await supabase
+          .from('rent_records')
+          .insert({
+            tenant_name:    rentData.tenantName,
+            landlord_name:  rentData.landlordName,
+            address:        rentData.address,
+            neighborhood:   rentData.neighborhood,
+            room_type:      rentData.roomType,
+            previous_rent:  parseFloat(rentData.previousRent),
+            proposed_rent:  parseFloat(rentData.proposedRent),
+            effective_date: rentData.effectiveDate,
+          })
+          .select()
+          .single()
+        recordId = data?.id ?? null
+      }
+    } catch { /* continue without persisting */ } finally {
       updateRentData({ percentageIncrease: pct, currentRecordId: recordId })
       setLoading(false)
       navigate('/legal')
@@ -76,9 +76,8 @@ export default function RentInputForm() {
             onChange={e => setField('tenantName', e.target.value)}
             placeholder="e.g. Kofi Mensah"
           />
-          {errors.tenantName && <p className="text-red-500 text-xs mt-1">{errors.tenantName}</p>}
+          {errors.tenantName && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.tenantName}</p>}
         </div>
-
         <div>
           <label className="form-label">Landlord Full Name *</label>
           <input
@@ -87,14 +86,14 @@ export default function RentInputForm() {
             onChange={e => setField('landlordName', e.target.value)}
             placeholder="e.g. Ama Asante"
           />
-          {errors.landlordName && <p className="text-red-500 text-xs mt-1">{errors.landlordName}</p>}
+          {errors.landlordName && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.landlordName}</p>}
         </div>
       </div>
 
       <div>
         <label className="form-label">Neighborhood</label>
         <input
-          className="form-input bg-gray-50"
+          className="form-input bg-amber-50"
           value={rentData.neighborhood}
           onChange={e => setField('neighborhood', e.target.value)}
         />
@@ -108,7 +107,7 @@ export default function RentInputForm() {
           onChange={e => setField('address', e.target.value)}
           placeholder="e.g. House 12, Block C, Community 23"
         />
-        {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+        {errors.address && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.address}</p>}
       </div>
 
       <div>
@@ -121,36 +120,31 @@ export default function RentInputForm() {
           <option value="">Select room type</option>
           {ROOM_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-        {errors.roomType && <p className="text-red-500 text-xs mt-1">{errors.roomType}</p>}
+        {errors.roomType && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.roomType}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="form-label">Current Monthly Rent (GHS) *</label>
           <input
-            type="number"
-            min="1"
-            step="0.01"
+            type="number" min="1" step="0.01"
             className="form-input"
             value={rentData.previousRent}
             onChange={e => setField('previousRent', e.target.value)}
             placeholder="e.g. 1200"
           />
-          {errors.previousRent && <p className="text-red-500 text-xs mt-1">{errors.previousRent}</p>}
+          {errors.previousRent && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.previousRent}</p>}
         </div>
-
         <div>
           <label className="form-label">Proposed New Rent (GHS) *</label>
           <input
-            type="number"
-            min="1"
-            step="0.01"
+            type="number" min="1" step="0.01"
             className="form-input"
             value={rentData.proposedRent}
             onChange={e => setField('proposedRent', e.target.value)}
             placeholder="e.g. 1800"
           />
-          {errors.proposedRent && <p className="text-red-500 text-xs mt-1">{errors.proposedRent}</p>}
+          {errors.proposedRent && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.proposedRent}</p>}
         </div>
       </div>
 
@@ -162,7 +156,7 @@ export default function RentInputForm() {
           value={rentData.effectiveDate}
           onChange={e => setField('effectiveDate', e.target.value)}
         />
-        {errors.effectiveDate && <p className="text-red-500 text-xs mt-1">{errors.effectiveDate}</p>}
+        {errors.effectiveDate && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.effectiveDate}</p>}
       </div>
 
       <button type="submit" disabled={loading} className="btn-primary w-full">

@@ -4,9 +4,7 @@ import { getCompromiseRate } from '../../lib/rentCalculations'
 export default function LeaseForm() {
   const { rentData, updateRentData } = useRent()
 
-  const suggestedRent = rentData.previousRent
-    ? getCompromiseRate(rentData.previousRent)
-    : ''
+  const suggestedRent = rentData.previousRent ? getCompromiseRate(rentData.previousRent) : ''
 
   function setField(key, value) {
     updateRentData({ [key]: value })
@@ -14,7 +12,9 @@ export default function LeaseForm() {
 
   return (
     <div className="card space-y-5">
-      <h3 className="font-semibold text-gray-900 text-lg">Lease Agreement Details</h3>
+      <h3 className="font-black text-[#064e3b] uppercase tracking-wide text-sm">
+        Lease Agreement Details
+      </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
@@ -49,15 +49,13 @@ export default function LeaseForm() {
           <label className="form-label">
             Agreed Monthly Rent (GHS)
             {suggestedRent && (
-              <span className="text-green-600 font-normal ml-1">
+              <span className="text-[#064e3b]/60 font-normal normal-case tracking-normal ml-1">
                 — suggested: GHS {suggestedRent.toLocaleString()}
               </span>
             )}
           </label>
           <input
-            type="number"
-            min="1"
-            step="0.01"
+            type="number" min="1" step="0.01"
             className="form-input"
             value={rentData.agreedRent}
             placeholder={suggestedRent ? String(suggestedRent) : 'Enter agreed rent'}
