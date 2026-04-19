@@ -1,0 +1,70 @@
+import { useRent } from '../../context/RentContext'
+import { generateLeaseAgreement } from '../../templates/leaseAgreement'
+import { supabase } from '../../lib/supabaseClient'
+
+export default function LeasePreview() {
+  const { rentData } = useRent()
+
+  const isReady = Boolean(
+    rentData.tenantName &&
+    rentData.landlordName &&
+    rentData.address &&
+    rentData.agreedRent &&
+    rentData.leaseStart,
+  )
+
+  if (!isReady) {
+    return (
+      <div className="card text-center py-10 text-gray-400 border-dashed">
+        <span className="text-3xl mb-2 block">📄</span>
+        <p className="text-sm">Complete all fields above to preview the lease agreement.</p>
+      </div>
+    )
+  }
+
+  const agreement = generateLeaseAgreement({
+    tenantName:    rentData.tenantName,
+    landlordName:  rentData.landlordName,
+    address:       rentData.address,
+    agreedRent:    rentData.agreedRent,
+    leaseStart:    rentData.leaseStart,
+    leaseDuration: rentData.leaseDuration,
+    renewalTerms:  rentData.renewalTerms,
+    neighborhood:  rentData.neighborhood,
+  })
+
+  async function handlePrint() {
+    try {
+      if (rentData.currentRecordId) {
+        await supabase.from('lease_agreements').insert({
+          rent_record_id:  rentData.currentRecordId,
+          agreed_rent:     parseFloat(rentData.agreedRent),
+          lease_start:     rentData.leaseStart,
+          duration_months: parseInt(rentData.leaseDuration),
+          renewal_terms:   rentData.renewalTerms,
+          agreement_body:  agreement,
+        })
+      }
+    } catch {
+      // Non-critical — proceed to print regardless
+    }
+    window.print()
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
+        <h3 className="font-semibold text-gray-900">Lease Agreement Preview</h3>
+        <button onClick={handlePrint} className="btn-primary flex items-center gap-2 shrink-0">
+          🖨 Print / Save as PDF
+        </button>
+      </div>
+
+      <div className="printable-zone card bg-white overflow-x-auto">
+        <pre className="whitespace-pre-wrap font-serif text-sm text-gray-900 leading-relaxed min-w-0">
+          {agreement}
+        </pre>
+      </div>
+    </div>
+  )
+}
